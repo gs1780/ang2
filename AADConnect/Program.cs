@@ -8,7 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 IdentityModelEventSource.ShowPII = true;
 
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
+    .AddMicrosoftIdentityWebApp(options =>
+    {
+        options.SaveTokens = true;
+    },
+    builder.Configuration.GetSection("AzureAd"));
 
 builder.Services.AddControllersWithViews()
     .AddMicrosoftIdentityUI();
