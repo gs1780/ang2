@@ -1,0 +1,18 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h2>After Logout</h2>
+
+@if (User.Identity?.IsAuthenticated ?? false)
+{
+    <form asp-action="Logout" method="post">
+        <button type="submit">Logout</button>
+    </form>
+}
+else
+{
+    <p>
+        <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn">Sign In</a>
+    </p>
+}

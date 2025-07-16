@@ -26,10 +26,16 @@ namespace AADConnect.Controllers
         [HttpPost]
         public IActionResult Logout()
         {
-            var callbackUrl = Url.Action("Index", "Home", values: null, protocol: Request.Scheme);
+            var callbackUrl = Url.Action("AfterLogout", "Home", values: null, protocol: Request.Scheme);
             return SignOut(new AuthenticationProperties { RedirectUri = callbackUrl },
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 OpenIdConnectDefaults.AuthenticationScheme);
+        }
+
+        [AllowAnonymous]
+        public IActionResult AfterLogout()
+        {
+            return AfterLogout();
         }
     }
 }
