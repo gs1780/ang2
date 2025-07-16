@@ -7,16 +7,29 @@ var builder = WebApplication.CreateBuilder(args);
 
 IdentityModelEventSource.ShowPII = true;
 
+
+/*
+builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApp(
+        builder.Configuration.GetSection("AzureAd"));
+
+builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
+{
+    options.SaveTokens = true;
+});
+*/
+
 builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"))
     .EnableTokenAcquisitionToCallDownstreamApi(
-        new[] { builder.Configuration["AzureAd:Scope"]! })
+        new[] { "api://7f6497c4-b4cd-4f51-8c4a-33856c30408b/user.read" })
     .AddInMemoryTokenCaches();
 
 builder.Services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, options =>
 {
     options.SaveTokens = true;
 });
+
 
 builder.Services.AddControllersWithViews()
     .AddMicrosoftIdentityUI();
