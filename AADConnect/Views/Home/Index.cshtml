@@ -3,4 +3,23 @@
 }
 
 <h2>Home</h2>
-<p><a href="/Results/Tokens">View Tokens</a></p>
+
+@if (User.Identity?.IsAuthenticated ?? false)
+{
+    <form asp-action="Logout" method="post">
+        <button type="submit">Logout</button>
+    </form>
+
+    <div>
+        <label>ID Token</label><br />
+        <textarea readonly rows="10" style="width:100%">@ViewData["IdToken"]</textarea>
+    </div>
+    <div>
+        <label>Access Token</label><br />
+        <textarea readonly rows="10" style="width:100%">@ViewData["AccessToken"]</textarea>
+    </div>
+}
+else
+{
+    <p><a href="/MicrosoftIdentity/Account/SignIn">Sign In</a></p>
+}
