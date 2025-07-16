@@ -28,14 +28,13 @@ namespace AADConnect.Controllers
         {
             var callbackUrl = Url.Action("AfterLogout", "Home", values: null, protocol: Request.Scheme);
             return SignOut(new AuthenticationProperties { RedirectUri = callbackUrl },
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                OpenIdConnectDefaults.AuthenticationScheme);
+                CookieAuthenticationDefaults.AuthenticationScheme);
         }
 
         [AllowAnonymous]
         public IActionResult AfterLogout()
         {
-            return AfterLogout();
+            return View();
         }
     }
 }
