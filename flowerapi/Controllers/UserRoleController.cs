@@ -1,4 +1,5 @@
 using System.Linq;
+using System;
 using AuthApi.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,18 +22,28 @@ namespace AuthApi.Controllers
         [AllowAnonymous]
         public IActionResult Get()
         {
-            var users = _dbContext.Users
-                .Include(u => u.UserRoles)
-                    .ThenInclude(ur => ur.Role)
-                .Select(u => new
-                {
-                    u.Id,
-                    u.Email,
-                    Roles = u.UserRoles.Select(ur => ur.Role.Name).ToList()
-                })
-                .ToList();
+            string sqlQuery = string.Empty;
+            try
+            {
+                var query = _dbContext.Users
+                    .Include(u => u.UserRoles)
+                        .ThenInclude(ur => ur.Role)
+                    .Select(u => new
+                    {
+                        u.Id,
+                        u.Email,
+                        Roles = u.UserRoles.Select(ur => ur.Role.Name).ToList()
+                    });
 
-            return Ok(users);
+                sqlQuery = query.ToQueryString();
+                var users = query.ToList();
+
+                return Ok(new { Data = users, SqlQuery = sqlQuery });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { SqlQuery = sqlQuery, Error = ex.ToString() });
+            }
         }
     }
 }
